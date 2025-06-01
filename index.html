@@ -263,13 +263,13 @@
             "Mãi yêu em, đến trọn đời này"
         ];
         
-        // Danh sách 5 ảnh (sử dụng ảnh từ Picsum)
-        const imageUrls = [
-            "https://picsum.photos/id/1005/300/400",
-            "https://picsum.photos/id/1012/300/400",
-            "https://picsum.photos/id/1015/300/400",
-            "https://picsum.photos/id/1018/300/400",
-            "https://picsum.photos/id/1025/300/400"
+        // Danh sách 5 ảnh (sử dụng base64 để đảm bảo hoạt động offline)
+        const images = [
+            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Crect width='300' height='400' fill='%23ff69b4'/%3E%3Ccircle cx='150' cy='150' r='100' fill='%23ffffff'/%3E%3C/svg%3E",
+            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Crect width='300' height='400' fill='%23ff1493'/%3E%3Cpath d='M150,100 L180,180 L100,150 L200,150 L120,180 Z' fill='%23ffffff'/%3E%3C/svg%3E",
+            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Crect width='300' height='400' fill='%23db7093'/%3E%3Crect x='100' y='120' width='100' height='160' rx='10' fill='%23ffffff'/%3E%3C/svg%3E",
+            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Crect width='300' height='400' fill='%23c71585'/%3E%3Cellipse cx='150' cy='180' rx='80' ry='50' fill='%23ffffff'/%3E%3C/svg%3E",
+            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Crect width='300' height='400' fill='%23ba55d3'/%3E%3Cpolygon points='150,100 220,280 80,280' fill='%23ffffff'/%3E%3C/svg%3E"
         ];
         
         // Tạo ngôi sao lấp lánh
@@ -335,7 +335,7 @@
                 // Thêm ảnh cho cột
                 const imageItem = document.createElement('img');
                 imageItem.classList.add('image-item');
-                imageItem.src = imageUrls[i];
+                imageItem.src = images[i];
                 imageItem.alt = `Hình ảnh tình yêu ${i+1}`;
                 
                 // Đặt thời gian bắt đầu animation ngẫu nhiên
