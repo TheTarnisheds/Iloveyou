@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lời Tỏ Tình Từ Trái Tim</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow: hidden;
+            background: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            perspective: 1000px;
+            touch-action: none;
+        }
+        
+        #universe {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform-style: preserve-3d;
+            transition: transform 0.1s;
+        }
+        
+        .layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            transform: translateZ(calc(var(--z) * 1px));
+            color: white;
+            font-size: calc(1.2rem + var(--i) * 0.2rem);
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.8);
+            padding: 20px;
+            opacity: calc(0.7 + var(--i) * 0.05);
+        }
+        
+        .text-line {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            margin: 15px 0;
+            animation: floatDown calc(20s + var(--i) * 5s) linear infinite;
+            animation-delay: calc(var(--delay) * 1s);
+            font-weight: 500;
+            color: rgba(255, 255, 255, calc(0.8 - var(--i) * 0.1));
+            left: calc(var(--start-x) * 1%);
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+        
+        @keyframes floatDown {
+            0% { 
+                transform: translateX(-50%) translateY(-100px);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { 
+                transform: translateX(-50%) translateY(100vh);
+                opacity: 0;
+            }
+        }
+        
+        .image-container {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(255, 182, 193, 0.7);
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.8);
+            transform: translateZ(calc(var(--img-z) * 1px));
+            animation: float 8s infinite ease-in-out;
+            animation-delay: calc(var(--img-delay) * 1s);
+            z-index: 10;
+        }
+        
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .image-container:hover img {
+            transform: scale(1.1);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateZ(calc(var(--img-z) * 1px)); }
+            50% { transform: translateY(-20px) translateZ(calc(var(--img-z) * 1px)); }
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 24px;
+            color: rgba(255, 105, 180, 0.7);
+            animation: heartFloat 10s linear infinite;
+            z-index: 5;
+        }
+        
+        @keyframes heartFloat {
+            0% { 
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { 
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .title {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 2.5rem;
+            color: #ff69b4;
+            text-shadow: 0 0 15px rgba(255, 105, 180, 0.9);
+            letter-spacing: 3px;
+            z-index: 10;
+            transform: translateZ(50px);
+        }
+        
+        .instruction {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            z-index: 10;
+            transform: translateZ(50px);
+        }
+        
+        .image-counter {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+        
+        .controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        
+        .control-btn {
+            background: rgba(255, 105, 180, 0.7);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.8);
+            transition: all 0.3s;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 105, 180, 1);
+            transform: scale(1.1);
+        }
+        
+        .message-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) translateZ(100px);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 20px;
+            border: 3px solid #ff69b4;
+            text-align: center;
+            max-width: 80%;
+            z-index: 100;
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.6);
+            display: none;
+        }
+        
+        .message-container h2 {
+            color: #ff69b4;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .message-container p {
+            color: white;
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .close-btn {
+            background: #ff69b4;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .close-btn:hover {
+            background: #ff1493;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div id="universe"></div>
+    
+    <div class="title">Trái Tim Anh Thuộc Về Em ❤️</div>
+    
+    <div class="container" id="container">
+        <!-- Các lớp text sẽ được tạo bằng JavaScript -->
+        <!-- Các ảnh sẽ được tạo bằng JavaScript -->
+    </div>
+    
+   
+    
+    <div class="instruction">Di chuyển chuột để thay đổi góc nhìn</div>
+    <div class="image-counter">Ảnh: <span id="img-counter">1</span>/5</div>
+    
+    <div class="message-container" id="messageBox">
+        <h2>Gửi đến người anh yêu!</h2>
+        <p>Em là ánh sáng trong cuộc đời anh, là lý do anh thức dậy mỗi sớm mai. Tình yêu anh dành cho em ngày một lớn hơn và anh muốn cùng em đi hết quãng đời còn lại.</p>
+        <button class="close-btn" id="closeBtn">Đóng</button>
+    </div>
+
+    <script>
+        // Tạo vũ trụ sao lung linh
+        function createUniverse() {
+            const universe = document.getElementById('universe');
+            const starCount = 500;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Kích thước ngẫu nhiên
+                const size = Math.random() * 3;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                // Vị trí ngẫu nhiên
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                
+                // Tốc độ nhấp nháy ngẫu nhiên
+                const duration = 2 + Math.random() * 3;
+                star.style.setProperty('--duration', `${duration}s`);
+                
+                // Màu sắc ngẫu nhiên
+                const colors = ['#ffffff', '#ffb6c1', '#87ceeb', '#f0e68c'];
+                star.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                universe.appendChild(star);
+            }
+        }
+        
+        // Danh sách 15 câu tỏ tình
+        const loveMessages = [
+            "Ngay từ cái nhìn đầu tiên, trái tim anh đã thuộc về em",
+            "Mỗi ngày bên em là một ngày hạnh phúc",
+            "Em là mặt trời soi sáng cuộc đời anh",
+            "Tình yêu anh dành cho em là vô điều kiện",
+            "Anh muốn cùng em đi đến hết cuộc đời này",
+            "Nụ cười của em là động lực cho anh mỗi ngày",
+            "Trái tim anh chỉ biết yêu mình em mà thôi",
+            "Anh sẽ luôn bên em, dù bất cứ chuyện gì xảy ra",
+            "Em chính là điều tuyệt vời nhất trong cuộc đời anh",
+            "Mỗi khoảnh khắc xa em đều là nỗi nhớ khôn nguôi",
+            "Anh muốn thức dậy bên em mỗi sớm mai",
+            "Em khiến cuộc sống của anh trở nên ý nghĩa",
+            "Tình yêu của anh dành cho em ngày một lớn hơn",
+            "Anh cảm ơn vũ trụ đã mang em đến bên anh",
+            "Em là người anh yêu nhất, hôm nay và mãi mãi"
+        ];
+        
+        // Tạo các lớp text (5 lớp)
+        function createTextLayers() {
+            const container = document.getElementById('container');
+            const layersCount = 5;
+            
+            for (let i = 0; i < layersCount; i++) {
+                const layer = document.createElement('div');
+                layer.classList.add('layer');
+                layer.style.setProperty('--i', i);
+                layer.style.setProperty('--z', i * -50);
+                
+                container.appendChild(layer);
+            }
+            
+            // Thêm các dòng chữ vào các lớp
+            const layers = document.querySelectorAll('.layer');
+            
+            for (let i = 0; i < loveMessages.length; i++) {
+                const textLine = document.createElement('div');
+                textLine.classList.add('text-line');
+                textLine.textContent = loveMessages[i];
+                
+                // Chọn lớp ngẫu nhiên
+                const layerIndex = Math.floor(Math.random() * layersCount);
+                textLine.style.setProperty('--i', layerIndex);
+                textLine.style.setProperty('--delay', Math.random() * 10);
+                
+                // Vị trí bắt đầu ngẫu nhiên trên cùng
+                textLine.style.setProperty('--start-x', Math.random() * 100);
+                
+                layers[layerIndex].appendChild(textLine);
+            }
+        }
+        
+        // Danh sách ảnh từ thư mục lưu trữ
+        const imagePaths = [
+            "images/image1.jpg",
+            "images/image2.jpg",
+            "images/image3.jpg",
+            "images/image4.jpg",
+            "images/image5.jpg"
+        ];
+        
+        // Tạo các ảnh
+        function createImages() {
+            const container = document.getElementById('container');
+            const imageCount = 5;
+            const positions = [
+                { top: '20%', left: '15%' },
+                { top: '30%', left: '75%' },
+                { top: '60%', left: '20%' },
+                { top: '70%', left: '65%' },
+                { top: '45%', left: '50%' }
+            ];
+            
+            for (let i = 0; i < imageCount; i++) {
+                const imgContainer = document.createElement('div');
+                imgContainer.classList.add('image-container');
+                imgContainer.style.top = positions[i].top;
+                imgContainer.style.left = positions[i].left;
+                imgContainer.style.setProperty('--img-z', i * 100 + 100);
+                imgContainer.style.setProperty('--img-delay', i);
+                imgContainer.dataset.index = i + 1;
+                
+                const img = document.createElement('img');
+                // Sử dụng ảnh từ thư mục lưu trữ
+                img.src = imagePaths[i];
+                img.alt = `Hình ảnh tình yêu ${i+1}`;
+                img.onerror = function() {
+                    // Tạo hình ảnh placeholder nếu không tìm thấy ảnh
+                    this.onerror = null;
+                    this.src = `https://picsum.photos/300/300?random=${i}&grayscale&blur=2`;
+                };
+                
+                // Thêm sự kiện click để thay đổi ảnh
+                imgContainer.addEventListener('click', () => {
+                    document.getElementById('img-counter').textContent = imgContainer.dataset.index;
+                });
+                
+                imgContainer.appendChild(img);
+                container.appendChild(imgContainer);
+            }
+        }
+        
+        // Tạo hiệu ứng trái tim bay
+        function createHearts() {
+            const container = document.getElementById('container');
+            const heartCount = 30;
+            
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '❤';
+                heart.style.left = `${Math.random() * 100}%`;
+                heart.style.animationDelay = `${Math.random() * 10}s`;
+                heart.style.fontSize = `${Math.random() * 20 + 15}px`;
+                heart.style.opacity = Math.random() * 0.7 + 0.3;
+                
+                container.appendChild(heart);
+            }
+        }
+        
+        // Hiệu ứng điều chỉnh góc nhìn
+        function setupParallax() {
+            const container = document.getElementById('container');
+            
+            document.addEventListener('mousemove', (e) => {
+                const xAxis = (window.innerWidth / 2 - e.clientX) / 50;
+                const yAxis = (window.innerHeight / 2 - e.clientY) / 50;
+                
+                container.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            });
+            
+            // Hỗ trợ cho thiết bị di động
+            document.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1) {
+                    const touch = e.touches[0];
+                    const xAxis = (window.innerWidth / 2 - touch.clientX) / 50;
+                    const yAxis = (window.innerHeight / 2 - touch.clientY) / 50;
+                    
+                    container.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+                }
+            });
+        }
+        
+        // Khởi tạo tất cả hiệu ứng
+        function init() {
+            createUniverse();
+            createTextLayers();
+            createImages();
+            createHearts();
+            setupParallax();
+            
+            // Thêm sự kiện cho nút điều khiển
+            document.getElementById('pauseBtn').addEventListener('click', toggleAnimation);
+            document.getElementById('messageBtn').addEventListener('click', showLoveMessage);
+            document.getElementById('closeBtn').addEventListener('click', hideLoveMessage);
+        }
+        
+        // Hiển thị tin nhắn tình yêu
+        function showLoveMessage() {
+            document.getElementById('messageBox').style.display = 'block';
+        }
+        
+        // Ẩn tin nhắn tình yêu
+        function hideLoveMessage() {
+            document.getElementById('messageBox').style.display = 'none';
+        }
+        
+        // Bắt đầu khi trang web đã tải xong
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
